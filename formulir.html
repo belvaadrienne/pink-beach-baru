@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulir Pemesanan Pink Beach Lombok</title>
+<link rel="icon" type="jpg" href="https://media.istockphoto.com/id/825472422/id/vektor/pantai-venesia.jpg?s=1024x1024&w=is&k=20&c=V81JoBgudAj_j897yXmNreZh6ss_hjvuB13jAXSgXKw=">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Formulir Pemesanan Jasa</h1>
+    <nav>
+        <ul>
+            <li><a href="index.html">Kembali ke Home</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="container">
+<form id="orderForm">
+
+<input type="hidden" id="promo_code" name="promo_code" value="DISCOUNT2026">
+
+<section>
+<h3>Data Pribadi</h3>
+
+<div class="form-group">
+<label>Nama Lengkap:</label>
+<input type="text" id="nama" name="nama" placeholder="Masukkan nama Anda" required>
+</div>
+
+<div class="form-group">
+<label>Password Akun:</label>
+<input type="password" id="pass" name="pass" placeholder="Password untuk cek status">
+</div>
+
+<div class="form-group">
+<label>Email:</label>
+<input type="email" id="email" name="email" required>
+</div>
+
+<div class="form-group">
+<label>Nomor WhatsApp (Tel):</label>
+<input type="tel" id="telepon" name="telepon">
+</div>
+
+<div class="form-group">
+<label>Alamat:</label>
+<textarea id="alamat" name="alamat" rows="3"></textarea>
+</div>
+
+<div class="form-group">
+<label>Kode Pos:</label>
+<input type="text" id="kodepos" name="kodepos" placeholder="Masukkan kode pos anda" required>
+</div>
+
+</section>
+
+<section>
+<h3>Detail Pesanan</h3>
+
+<div class="form-group">
+<label>Tanggal Pemotretan:</label>
+<input type="date" id="tanggal" name="tanggal">
+</div>
+
+<div class="form-group">
+<label>Jam Mulai:</label>
+<input type="time" id="jam" name="jam">
+</div>
+
+<div class="form-group">
+<label>Jumlah Personil:</label>
+<input type="number" id="jumlah" name="jumlah" min="1" max="50">
+</div>
+
+<div class="form-group">
+<label>Link Referensi Gaya:</label>
+<input type="url" id="referensi" name="referensi">
+</div>
+
+</section>
+
+<section>
+<h3>Pilihan Tambahan</h3>
+
+<div class="form-group">
+<label>Metode Pembayaran:</label>
+<input type="radio" name="payment" value="Transfer" checked> Transfer Bank
+<input type="radio" name="payment" value="E-Wallet"> E-Wallet
+</div>
+
+<div class="form-group">
+<label>Layanan Tambahan:</label>
+<input type="checkbox" name="addon" value="Makeup"> Jasa Makeup
+<input type="checkbox" name="addon" value="Kostum"> Sewa Kostum
+</div>
+
+<div class="form-group">
+<label>Unggah Dokumen:</label>
+<input type="file" id="dokumen" name="dokumen">
+</div>
+
+</section>
+
+<section>
+<input type="button" value="Cek Ketersediaan" onclick="alert('Slot Tersedia!')">
+<input type="reset" value="Kosongkan Form">
+<hr>
+<input type="submit" value="Kirim Pesanan Sekarang">
+</section>
+
+</form>
+
+<div id="result" style="margin-top:20px;padding:15px;background:#e8f4fd;display:none;">
+<h3>Data Berhasil Disimpan!</h3>
+<p id="displayData"></p>
+</div>
+
+</main>
+
+<script>
+document.getElementById('orderForm').addEventListener('submit', function(event) {
+
+    event.preventDefault();
+
+    const formData = new FormData(this);
+    const dataObj = {};
+    const addons = formData.getAll('addon');
+
+    formData.forEach((value, key) => {
+        if (key === 'addon') {
+            dataObj[key] = addons;
+        } else if (value instanceof File) {
+            dataObj[key] = value.name ? value.name : "Tidak ada file";
+        } else {
+            dataObj[key] = value;
+        }
+    });
+
+    localStorage.setItem('pesanan_terakhir', JSON.stringify(dataObj));
+
+    let outputHtml = "<ul style='list-style:none;padding:0'>";
+    for (const [key, value] of Object.entries(dataObj)) {
+        const label = key.replace("_"," ").toUpperCase();
+        outputHtml += `<li><strong>${label}:</strong> ${Array.isArray(value)?value.join(', '):value}</li>`;
+    }
+    outputHtml += "</ul>";
+
+    document.getElementById('displayData').innerHTML = outputHtml;
+    document.getElementById('result').style.display = 'block';
+
+    alert("Halo " + dataObj.nama + ", data pesanan Anda telah disimpan!");
+});
+
+window.addEventListener('load', () => {
+    const savedData = localStorage.getItem('pesanan_terakhir');
+    if (savedData) {
+        console.log("Data pesanan terakhir:", JSON.parse(savedData));
+    }
+});
+</script>
+
+</body>
+</html>
